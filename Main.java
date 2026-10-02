@@ -17,3 +17,15 @@ public class Main {
             System.out.println("Entrada vazia. Tente novamente.");
         }
     }
+
+     static int lerInt(String pergunta) {
+        while (true) {
+            String s = lerTexto(pergunta);
+            try {
+                return Integer.parseInt(s);
+            } catch (NumberFormatException e) {
+                System.out.println("Valor inválido: digite um número inteiro.");
+            }
+        }
+    }
+}
