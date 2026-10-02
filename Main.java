@@ -88,6 +88,7 @@ public class Main {
             System.out.println("6 - Buscar pedidos por funcionário");
             System.out.println("7 - Buscar pedidos por item");
             System.out.println("8 - Ver detalhes de um pedido");
+            System.out.println("11 - Estatísticas gerais");
         }
         System.out.println("0 - Sair");
     }
@@ -232,6 +233,11 @@ public class Main {
                     break;
                 case 10:
                     ExcluirPedido.executar(sistema);
+                    break;
+                case 11:
+                    if (exigirAdmin(sistema)) {
+                        System.out.println(new Estatisticas(sistema.getPedidos()).relatorio());
+                    }
                     break;
                 case 0:
                     executando = false;
