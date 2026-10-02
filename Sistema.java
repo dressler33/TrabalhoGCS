@@ -1,9 +1,12 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Sistema {
     private final List<Departamento> departamentos = new ArrayList<>();
     private final List<Usuario> usuarios = new ArrayList<>();
+    private final List<Pedido> pedidos = new ArrayList<>();
+    private int proximoIdPedido = 1;
     private Usuario usuarioAtual;
 
     public Sistema() {
@@ -13,6 +16,12 @@ public class Sistema {
     public Usuario getUsuarioAtual() { return usuarioAtual; }
     public List<Usuario> getUsuarios() { return usuarios; }
     public List<Departamento> getDepartamentos() { return departamentos; }
+
+    // ---- Pedidos ----
+    public List<Pedido> getPedidos() { return Collections.unmodifiableList(pedidos); }
+    public int proximoIdPedido() { return proximoIdPedido++; }
+    public void adicionarPedido(Pedido p) { pedidos.add(p); }
+    public boolean removerPedido(Pedido p) { return pedidos.remove(p); }
 
     public boolean trocarUsuario(int id) {
         for (Usuario u : usuarios) {
@@ -55,5 +64,6 @@ public class Sistema {
         usuarios.add(new Usuario(15, "Olivia Ribeiro", F, ti));
         usuarios.add(new Usuario(16, "Paulo Henrique Gomes", A, ti));
         usuarioAtual = usuarios.get(0);
+        PedidosIniciais.carregar(this);
     }
 }
