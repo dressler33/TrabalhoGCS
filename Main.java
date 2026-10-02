@@ -44,4 +44,46 @@ public class Main {
             System.out.println(u);
         }
     }
+
+    static void listarDepartamentos(Sistema sistema) {
+        for (Departamento d : sistema.getDepartamentos()) {
+            System.out.println(d);
+        }
+    }
+
+    static void trocarUsuario(Sistema sistema) {
+        listarUsuarios(sistema);
+        int id = lerInt("Digite o id do usuário: ");
+        if (sistema.trocarUsuario(id)) {
+            System.out.println("Usuário alterado para: " + sistema.getUsuarioAtual());
+        } else {
+            System.out.println("Usuário não encontrado.");
+        }
+    }
+
+    public static void main(String[] args) {
+        Sistema sistema = new Sistema();
+        boolean executando = true;
+        while (executando) {
+            mostrarMenu(sistema);
+            int opcao = lerInt("Escolha uma opção: ");
+            switch (opcao) {
+                case 1:
+                    trocarUsuario(sistema);
+                    break;
+                case 2:
+                    listarUsuarios(sistema);
+                    break;
+                case 3:
+                    listarDepartamentos(sistema);
+                    break;
+                case 0:
+                    executando = false;
+                    break;
+                default:
+                    System.out.println("Opção inválida.");
+            }
+        }
+        System.out.println("Até logo!");
+    }
 }
