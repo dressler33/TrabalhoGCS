@@ -89,6 +89,7 @@ public class Main {
             System.out.println("7 - Buscar pedidos por item");
             System.out.println("8 - Ver detalhes de um pedido");
             System.out.println("11 - Estatísticas gerais");
+            System.out.println("12 - Concluir pedido (itens entregues)");
         }
         System.out.println("0 - Sair");
     }
@@ -167,6 +168,51 @@ public class Main {
         }
     }
 
+    static void concluirPedido(Sistema sistema) {
+        List<Pedido> aprovados = AvaliacaoPedido.pedidosParaConcluir(sistema.getPedidos());
+        if (aprovados.isEmpty()) {
+            System.out.println("Não há pedidos aprovados aguardando conclusão.");
+            return;
+        }
+        System.out.println("Pedidos aprovados aguardando conclusão:");
+        mostrarPedidos(aprovados);
+        int id = lerInt("Número do pedido (0 para voltar): ");
+        if (id == 0) {
+            return;
+        }
+        Pedido pedido = ConsultasAdmin.porId(sistema.getPedidos(), id);
+        if (pedido == null) {
+            System.out.println("Pedido não encontrado.");
+            return;
+        }
+        if (pedido.getStatus() != StatusPedido.APROVADO) {
+            System.out.println("Somente pedidos aprovados podem ser concluídos. Este está "
+                    + pedido.getStatus() + ".");
+            return;
+        }
+        if (pedido.getDataConclusao() != null) {
+            System.out.println("Este pedido já foi concluído e não pode ser alterado.");
+            return;
+        }
+        System.out.println(ConsultasAdmin.detalhes(pedido));
+        LocalDate data;
+        String r = lerTexto("Itens entregues hoje? (s/n): ").toLowerCase();
+        if (r.equals("s")) {
+            data = LocalDate.now();
+        } else if (r.equals("n")) {
+            data = lerData("Data de entrega");
+        } else {
+            System.out.println("Opção inválida. Nada foi alterado.");
+            return;
+        }
+        try {
+            AvaliacaoPedido.concluir(sistema.getUsuarioAtual(), pedido, data);
+            System.out.println("Pedido #" + pedido.getId() + " concluído.");
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
     static void listarEntreDatas(Sistema sistema) {
         LocalDate ini = lerData("Data inicial");
         LocalDate fim = lerData("Data final");
@@ -238,6 +284,9 @@ public class Main {
                     if (exigirAdmin(sistema)) {
                         System.out.println(new Estatisticas(sistema.getPedidos()).relatorio());
                     }
+                    break;
+                case 12:
+                    if (exigirAdmin(sistema)) concluirPedido(sistema);
                     break;
                 case 0:
                     executando = false;
