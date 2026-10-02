@@ -1,0 +1,79 @@
+--- a/Sistema.java
++++ b/Sistema.java
+@@ -1,9 +1,12 @@
+ import java.util.ArrayList;
++import java.util.Collections;
+ import java.util.List;
+ 
+ public class Sistema {
+     private final List<Departamento> departamentos = new ArrayList<>();
+     private final List<Usuario> usuarios = new ArrayList<>();
++    private final List<Pedido> pedidos = new ArrayList<>();
++    private int proximoIdPedido = 1;
+     private Usuario usuarioAtual;
+ 
+     public Sistema() {
+@@ -14,6 +17,12 @@
+     public List<Usuario> getUsuarios() { return usuarios; }
+     public List<Departamento> getDepartamentos() { return departamentos; }
+ 
++    // ---- Pedidos ----
++    public List<Pedido> getPedidos() { return Collections.unmodifiableList(pedidos); }
++    public int proximoIdPedido() { return proximoIdPedido++; }
++    public void adicionarPedido(Pedido p) { pedidos.add(p); }
++    public boolean removerPedido(Pedido p) { return pedidos.remove(p); }
++
+     public boolean trocarUsuario(int id) {
+         for (Usuario u : usuarios) {
+             if (u.getId() == id) {
+@@ -55,5 +64,6 @@
+         usuarios.add(new Usuario(15, "Olivia Ribeiro", F, ti));
+         usuarios.add(new Usuario(16, "Paulo Henrique Gomes", A, ti));
+         usuarioAtual = usuarios.get(0);
++        PedidosIniciais.carregar(this);
+     }
+ }
+\ No newline at end of file
+--- a/Main.java
++++ b/Main.java
+@@ -36,6 +36,22 @@
+         }
+     }
+ 
++    /** Lê um número decimal (aceita vírgula ou ponto); repete se for inválido. */
++    static double lerDouble(String pergunta) {
++        while (true) {
++            String s = lerTexto(pergunta).replace(',', '.');
++            try {
++                double v = Double.parseDouble(s);
++                if (Double.isNaN(v) || Double.isInfinite(v)) {
++                    throw new NumberFormatException();
++                }
++                return v;
++            } catch (NumberFormatException e) {
++                System.out.println("Valor inválido: digite um número (ex.: 12,50).");
++            }
++        }
++    }
++
+     /** Lê uma data no formato dd/mm/aaaa; repete a pergunta se for inválida. */
+     static LocalDate lerData(String pergunta) {
+         while (true) {
+@@ -63,6 +79,7 @@
+         System.out.println("1 - Trocar de usuário");
+         System.out.println("2 - Listar usuários");
+         System.out.println("3 - Listar departamentos");
++        System.out.println("9 - Registrar novo pedido");
+         if (sistema.getUsuarioAtual().isAdministrador()) {
+             System.out.println("--- Administrador ---");
+             System.out.println("4 - Avaliar pedido (aprovar/reprovar)");
+@@ -209,6 +226,9 @@
+                 case 8:
+                     if (exigirAdmin(sistema)) verDetalhes(sistema);
+                     break;
++                case 9:
++                    RegistrarPedido.executar(sistema);
++                    break;
+                 case 0:
+                     executando = false;
+                     break;

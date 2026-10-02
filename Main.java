@@ -36,6 +36,22 @@ public class Main {
         }
     }
 
+    /** Lê um número decimal (aceita vírgula ou ponto); repete se for inválido. */
+    static double lerDouble(String pergunta) {
+        while (true) {
+            String s = lerTexto(pergunta).replace(',', '.');
+            try {
+                double v = Double.parseDouble(s);
+                if (Double.isNaN(v) || Double.isInfinite(v)) {
+                    throw new NumberFormatException();
+                }
+                return v;
+            } catch (NumberFormatException e) {
+                System.out.println("Valor inválido: digite um número (ex.: 12,50).");
+            }
+        }
+    }
+
     /** Lê uma data no formato dd/mm/aaaa; repete a pergunta se for inválida. */
     static LocalDate lerData(String pergunta) {
         while (true) {
@@ -63,6 +79,8 @@ public class Main {
         System.out.println("1 - Trocar de usuário");
         System.out.println("2 - Listar usuários");
         System.out.println("3 - Listar departamentos");
+        System.out.println("9 - Registrar novo pedido");
+        System.out.println("10 - Excluir pedido (somente os seus, abertos)");
         if (sistema.getUsuarioAtual().isAdministrador()) {
             System.out.println("--- Administrador ---");
             System.out.println("4 - Avaliar pedido (aprovar/reprovar)");
@@ -208,6 +226,12 @@ public class Main {
                     break;
                 case 8:
                     if (exigirAdmin(sistema)) verDetalhes(sistema);
+                    break;
+                case 9:
+                    RegistrarPedido.executar(sistema);
+                    break;
+                case 10:
+                    ExcluirPedido.executar(sistema);
                     break;
                 case 0:
                     executando = false;
