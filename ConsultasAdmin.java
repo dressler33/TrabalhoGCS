@@ -52,4 +52,21 @@ public class ConsultasAdmin {
         }
         return null;
     }
+
+    public static String detalhes(Pedido p) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(p).append("\n");
+        sb.append(String.format(new Locale("pt", "BR"),
+                "Limite do departamento: R$ %,.2f%n", p.getDepartamento().getLimitePorPedido()));
+        sb.append("Itens:\n");
+        for (Item item : p.getItens()) {
+            sb.append("  - ").append(item).append("\n");
+        }
+        return sb.toString();
+    }
+
+    private static String normalizar(String s) {
+        String semAcento = Normalizer.normalize(s, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+        return semAcento.toLowerCase(Locale.ROOT).trim();
+    }
 }
