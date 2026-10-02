@@ -28,4 +28,20 @@ public class Main {
             }
         }
     }
+
+    static void mostrarMenu(Sistema sistema) {
+        System.out.println();
+        System.out.println("=== Controle de Aquisições ===");
+        System.out.println("Operador atual: " + sistema.getUsuarioAtual());
+        System.out.println("1 - Trocar de usuário");
+        System.out.println("2 - Listar usuários");
+        System.out.println("3 - Listar departamentos");
+        System.out.println("0 - Sair");
+    }
+
+    static void listarUsuarios(Sistema sistema) {
+        for (Usuario u : sistema.getUsuarios()) {
+            System.out.println(u);
+        }
+    }
 }
