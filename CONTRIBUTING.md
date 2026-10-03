@@ -7,8 +7,8 @@ Projeto: Sistema de Controle de Aquisições (GCS - Trabalho 1)
 | Nome completo                  | Usuário no GitHub |
 |---------------                 |-------------------|
 | Eduardo Dressler da Silva      | dressler33        |
-| [Nome 2]      | [usuario2]        |
-| [Nome 3]      | [usuario3]        |
+| Arthur Pulz Conzatti           | arthhurpc         |
+| Mariana Sager de Macedo        | mnasager         |
 
 ## Fluxo adotado: GitHub Flow
 
